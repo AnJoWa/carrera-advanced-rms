@@ -1,6 +1,6 @@
-# Advanced Race Management for Carrera Digital
+# Advanced Race Management System for Carrera Digital
 
-This is an advanced race management for Carrera Digital implemented in python and forked from https://github.com/wachjose88/carrera-advanced-rms. This Version directly supports Fullscreen Mode via command line option and is subject to active development to add more features.
+This is an advanced race management system (RMS) for Carrera Digital implemented in python and forked from https://github.com/wachjose88/carrera-advanced-rms. This Version directly supports Fullscreen Mode via command line option and is subject to active development to add more features.
 
 ## Install and Run
 
