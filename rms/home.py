@@ -275,7 +275,10 @@ class Home(QWidget):
         self.starts.addLayout(self.rhbox)
         self.btnrow = QHBoxLayout()
         self.fullscreen = QPushButton()
-        self.fullscreen.setText(self.tr('Fullscreen'))
+        if self.parent().fullscreen:
+            self.fullscreen.setText(self.tr('Exit Fullscreen'))
+        else:
+            self.fullscreen.setText(self.tr('Fullscreen'))
         self.fullscreen.clicked.connect(self.fullscreen_click)
         self.btnrow.addWidget(self.fullscreen)
         self.statistics = QPushButton()

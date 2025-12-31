@@ -25,13 +25,15 @@ from constants import COMP_MODE__TRAINING, COMP_MODE__QUALIFYING_LAPS, \
                       COMP_MODE__RACE_LAPS, \
                       COMP_MODE__RACE_TIME, \
                       SORT_MODE__LAPS, SORT_MODE__LAPTIME, \
-                      DUMMY_IDS
+                      DUMMY_IDS, \
+                      CU_TIMEOUT
 
 
 class RMS(QMainWindow):
 
-    def __init__(self, cu, cu_instance):
+    def __init__(self, cu, cu_instance, fullscreen):
         super().__init__()
+        self.fullscreen = fullscreen
         self.cuv = cu.version()
         self.show_pits = True
         self.show_fuel = True
@@ -81,8 +83,12 @@ class RMS(QMainWindow):
     def initUI(self):
 
         self.statusBar().showMessage('Ready')
-
-        if self.cuv not in DUMMY_IDS:
+        #if self.cuv not in DUMMY_IDS:
+        #    self.showMaximized()
+        # Wenn Argument Fullscreen, sonst Maximized
+        if self.fullscreen:
+            self.showFullScreen()
+        else:
             self.showMaximized()
         self.setWindowTitle('RMS')
         self.showHome()
@@ -345,8 +351,8 @@ if __name__ == '__main__':
     app.installTranslator(translator)
     parser = argparse.ArgumentParser(
         description='Advanced Race Management for Carrera Digital')
-    parser.add_argument('-cu', '--controlunit',
-                        help='cu address or dummy', required=True)
+    parser.add_argument('-cu', '--controlunit', help='cu address or dummy', required=True)
+    parser.add_argument('-f', '--fullscreen', help='Start in fullscreen mode', action='store_true')
     args = parser.parse_args()
     if args.controlunit in ['d', 'dummy']:
         from dummy import ControlUnit
@@ -354,7 +360,7 @@ if __name__ == '__main__':
         from carreralib import ControlUnit
         print(args.controlunit)
     with contextlib.closing(ControlUnit(str(args.controlunit),
-                                        timeout=3.0)) as cu:
+                                        timeout=CU_TIMEOUT)) as cu:
         print('CU version %s' % cu.version())
-        ex = RMS(cu, ControlUnit)
+        ex = RMS(cu, ControlUnit, args.fullscreen)
         sys.exit(app.exec_())

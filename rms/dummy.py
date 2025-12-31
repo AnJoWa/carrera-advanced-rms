@@ -60,7 +60,7 @@ class ControlUnit(object):
     def ignore(self, mask):
         pass
 
-    def request(self, buf=b'?', maxlength=None):
+    def poll(self, buf=b'?', maxlength=None):
         n = time.time()
         d = n - self.time
         if isinstance(self.last, ControlUnit.Timer):
@@ -120,7 +120,7 @@ class ControlUnit(object):
         pass
 
     def start(self):
-        self.request(self.START_KEY)
+        self.poll(self.START_KEY)
 
     def version(self):
         return self.device
