@@ -43,12 +43,14 @@ class TTSThread(QThread):
         voices = self.engine.getProperty('voices')
         usev = 'english'
         for voice in voices:
-            if lang in voice.languages[0].decode("utf-8"):
+            #if lang in voice.languages[0].decode("utf-8"): #Fix for Python 3
+            if lang in voice.languages[0]:
                 usev = voice.id
         self.engine.setProperty('voice', usev)
         rate = self.engine.getProperty('rate')
         self.engine.setProperty('rate', rate-43)
-        self.stop = False
+        #self.stop = False
+        self.stop = True #STOP talking!
 
     def run(self):
         while not self.stop:

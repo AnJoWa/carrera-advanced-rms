@@ -21,8 +21,8 @@ class IdleMonitor(QThread):
         while not self.stop:
             try:
                 time.sleep(0.01)
-                data = self.cu.request()
-
+                #data = self.cu.request()
+                data = self.cu.poll() #fix for new CarreraLib API
                 # print('IdleMonitor: ', data)
                 if data == last:
                     continue
@@ -51,14 +51,16 @@ class StartSignal(QThread):
     def run(self):
         self.show_lights.emit(101)
         self.cu.start()
-        status = self.cu.request()
+        #status = self.cu.request()
+        status = self.cu.poll() #fix for new CarreraLib API
         time.sleep(2.0)
         self.cu.start()
         finished = False
         last = None
         while not self.stop:
             time.sleep(0.01)
-            status = self.cu.request()
+            #status = self.cu.request()
+            status = self.cu.poll() #fix for new CarreraLib API
             if status == last:
                 continue
             # print('StartSignal: ', status)
@@ -157,11 +159,13 @@ class CUBridge(QThread):
                 self.drivers[addr].racing = True
         self.maxlaps = 0
         self.starttime = None
-        # discard remaining timer messages
-        status = self.cu.request()
+        # discard remaining timer messages 
+        # status = self.cu.request()
+        status = self.cu.poll() #fix for new CarreraLib API
         while not isinstance(status, self.cu_instance.Status):
             time.sleep(0.01)
-            status = self.cu.request()
+            # status = self.cu.request()
+            status = self.cu.poll() #fix for new CarreraLib API
             # print('re', status)
         self.status = status
         # reset cu timer
@@ -189,7 +193,8 @@ class CUBridge(QThread):
                 continue
             try:
                 time.sleep(0.01)
-                data = self.cu.request()
+                #data = self.cu.request()
+                data = self.cu.poll() #fix for new CarreraLib API
                 # prevent counting duplicate laps
                 # print('CUBridge: ', data)
                 if data == last:
