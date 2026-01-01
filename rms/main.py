@@ -31,9 +31,10 @@ from constants import COMP_MODE__TRAINING, COMP_MODE__QUALIFYING_LAPS, \
 
 class RMS(QMainWindow):
 
-    def __init__(self, cu, cu_instance, fullscreen):
+    def __init__(self, cu, cu_instance, fullscreen, tts_on):
         super().__init__()
         self.fullscreen = fullscreen
+        self.tts_on = tts_on
         self.cuv = cu.version()
         self.show_pits = True
         self.show_fuel = True
@@ -46,7 +47,7 @@ class RMS(QMainWindow):
         self.comp_duration = 0
         self.comp_starttime = datetime.now()
         self.tts = TTSHandler()
-        self.ttsthread = TTSThread(self.tts)
+        self.ttsthread = TTSThread(self.tts, tts_on)
         self.ttsthread.start()
         self.main_stack = QStackedWidget(self)
         self.qualifyingseq = QualifyingSeq(self)
@@ -353,6 +354,7 @@ if __name__ == '__main__':
         description='Advanced Race Management for Carrera Digital')
     parser.add_argument('-cu', '--controlunit', help='cu address or dummy', required=True)
     parser.add_argument('-f', '--fullscreen', help='Start in fullscreen mode', action='store_true')
+    parser.add_argument('-t', '--tts', help='Activate Text to Speech', action='store_true')
     args = parser.parse_args()
     if args.controlunit in ['d', 'dummy']:
         from dummy import ControlUnit
@@ -362,5 +364,5 @@ if __name__ == '__main__':
     with contextlib.closing(ControlUnit(str(args.controlunit),
                                         timeout=CU_TIMEOUT)) as cu:
         print('CU version %s' % cu.version())
-        ex = RMS(cu, ControlUnit, args.fullscreen)
+        ex = RMS(cu, ControlUnit, args.fullscreen, args.tts)
         sys.exit(app.exec_())

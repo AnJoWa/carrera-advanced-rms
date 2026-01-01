@@ -35,9 +35,10 @@ class TTSHandler():
 
 class TTSThread(QThread):
 
-    def __init__(self, handler):
+    def __init__(self, handler, tts_on):
         QThread.__init__(self)
         lang = locale.getlocale()[0][0:2]
+        self.tts_on = tts_on
         self.handler = handler
         self.engine = pyttsx3.init()
         voices = self.engine.getProperty('voices')
@@ -49,8 +50,10 @@ class TTSThread(QThread):
         self.engine.setProperty('voice', usev)
         rate = self.engine.getProperty('rate')
         self.engine.setProperty('rate', rate-43)
-        #self.stop = False
-        self.stop = True #STOP talking!
+        if tts_on:
+            self.stop = False #tts active
+        else:
+            self.stop = True #STOP talking!
 
     def run(self):
         while not self.stop:
